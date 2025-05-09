@@ -29,7 +29,7 @@ export default function Login() {
         router.push("/calendar");
       }
     } catch (err) {
-      setError("An error occurred during login");
+      setError("An error occurred during login: " + (err instanceof Error ? err.message : "Unknown error"));
     } finally {
       setIsLoading(false);
     }

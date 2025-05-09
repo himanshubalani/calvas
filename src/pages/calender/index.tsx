@@ -1,5 +1,6 @@
 import { useSession, signOut } from "next-auth/react";
 import Head from "next/head";
+import Image from "next/image";
 import MonthCalendar from "@/components/MonthCalendar";
 import SidePanel, { ExportOptions } from "@/components/SidePanel"; // Import SidePanel
 
@@ -24,10 +25,13 @@ export default function CalendarPage() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Calendium</h1>
           <div className="flex items-center space-x-3 sm:space-x-4">
             {session?.user?.image ? (
-              <img
+              <Image
                 src={session.user.image}
                 alt={session.user.name || "Profile"}
                 className="h-8 w-8 rounded-full"
+                width={32}
+                height={32}
+                priority
               />
             ) : (
               <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm">

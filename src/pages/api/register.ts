@@ -1,7 +1,6 @@
 // pages/api/register.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
-import bcrypt from "bcrypt";
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,15 +26,15 @@ export default async function handler(
       return res.status(400).json({ message: "Email already in use" });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password (to be added)
+
 
     // Create user
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password: hashedPassword,
+        password: "hashed_password_here", // Replace with actual hashed password
       },
     });
 

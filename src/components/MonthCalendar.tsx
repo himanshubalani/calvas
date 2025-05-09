@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import EntryModal from './EntryModal'; // Import the modal component
+import Image from "next/image";
 
 interface CalendarDay {
   day: number | string;
@@ -187,7 +188,7 @@ export default function MonthCalendar() {
                 {/* Image Background (if exists) - Fills entire cell */}
                 {hasPhoto && (
                   <div className="absolute inset-0 w-full h-full rounded-lg overflow-hidden">
-                    <img
+                    <Image
                       src={entry.photoUrl!}
                       alt={`Entry for ${dateKey}`}
                       className="w-full h-full object-cover"
