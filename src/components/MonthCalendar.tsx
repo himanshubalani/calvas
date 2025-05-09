@@ -142,7 +142,7 @@ export default function MonthCalendar() {
             >
             <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800 text-center">
                 {monthName} {year}
                 </h2>
@@ -172,35 +172,51 @@ export default function MonthCalendar() {
           {daysInMonth.map((dayObj, index) => {
             const dateKey = formatDateKey(dayObj.date);
             const entry = entries[dateKey];
+            const hasPhoto = entry?.photoUrl != null;
+            
             return (
               <div
                 key={`${dayObj.date.toISOString()}-${index}`}
-                className={`relative p-1 sm:p-2 h-20 sm:h-24 md:h-28 border border-gray-200 transition duration-150 ease-in-out flex flex-col group ${
+                className={`relative h-20 sm:h-24 md:h-28 border border-gray-200 transition duration-150 ease-in-out cursor-pointer overflow-hidden rounded-lg ${
                   dayObj.isCurrentMonth
-                    ? 'bg-white hover:bg-gray-50 cursor-pointer'
-                    : 'bg-gray-50 text-gray-400' // Don't make adjacent days look clickable if modal opens anyway
+                    ? 'hover:bg-gray-50'
+                    : 'opacity-60' // Make adjacent days slightly faded
                 } ${dayObj.isToday ? 'ring-2 ring-blue-500 ring-inset' : ''}`}
                 onClick={() => handleDayClick(dayObj)}
               >
-                 {/* Day Number */}
-                <span className={`self-end text-xs sm:text-sm ${dayObj.isToday ? 'font-bold text-blue-600' : ''} ${!dayObj.isCurrentMonth ? 'text-gray-400' : 'text-gray-700'}`}>
+                {/* Image Background (if exists) - Fills entire cell */}
+                {hasPhoto && (
+                  <div className="absolute inset-0 w-full h-full rounded-lg overflow-hidden">
+                    <img
+                      src={entry.photoUrl!}
+                      alt={`Entry for ${dateKey}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    {/* Semi-transparent gradient overlay to ensure date is visible */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent h-8"></div>
+                  </div>
+                )}
+
+                {/* Day Number - Positioned on top of image with gradient background for readability */}
+                <span 
+                  className={`absolute top-1 right-2 text-sm sm:text-base font-medium z-10 ${
+                    hasPhoto 
+                      ? 'text-white' // White text when over image
+                      : dayObj.isToday 
+                        ? 'text-blue-600' // Blue for today
+                        : dayObj.isCurrentMonth 
+                          ? 'text-gray-700' // Normal days
+                          : 'text-gray-400' // Adjacent months
+                  }`}
+                >
                   {dayObj.day}
                 </span>
 
-                {/* Content Area */}
-                <div className="flex-grow mt-1 overflow-hidden relative">
-                  {/* Display image thumbnail if exists */}
-                  {entry?.photoUrl && (
-                    <img
-                        src={entry.photoUrl}
-                        alt={`Entry for ${dateKey}`}
-                        className="absolute inset-0 w-full h-full object-cover rounded-sm"
-                        loading="lazy"
-                    />
-                  )}
-                   {/* Other indicators can go here */}
-                    
-                </div>
+                {/* Optional indicators can go here (like task count, etc) */}
+                {/* <div className="absolute bottom-1 left-1 flex gap-1">
+                  {entry?.hasNotes && <span className="w-2 h-2 rounded-full bg-blue-500"></span>}
+                </div> */}
               </div>
             );
           })}

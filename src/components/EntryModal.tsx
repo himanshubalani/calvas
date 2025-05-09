@@ -117,7 +117,7 @@ export default function EntryModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl relative" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -184,14 +184,14 @@ export default function EntryModal({
                     <div className="flex text-sm text-gray-600">
                         <label
                         htmlFor="file-upload"
-                        className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                        className="block cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
                         >
                         <span>Upload a file</span>
                         </label>
                         <p className="pl-1">or drag and drop</p>
                     </div>
                     <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                    {selectedFile && <p className="text-xs text-green-600 mt-1">Selected: {selectedFile.name}</p>}
+                    {selectedFile && <p className="text-xs text-green-600 mt-1 overflow-hidden whitespace-nowrap text-ellipsis">Selected: {selectedFile.name}</p>}
                     </div>
                 </div>
             </div>
