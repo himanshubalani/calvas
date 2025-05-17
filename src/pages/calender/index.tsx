@@ -1,37 +1,86 @@
+import { useRef } from 'react'; // Import useRef
 import { useSession, signOut } from "next-auth/react";
 import Head from "next/head";
-import Image from "next/image";
 import MonthCalendar from "@/components/MonthCalendar";
-import SidePanel, { ExportOptions } from "@/components/SidePanel"; // Import SidePanel
+import SidePanel, { ExportOptions } from "@/components/SidePanel";
+import { toPng, toJpeg } from 'html-to-image'; // Import html-to-image functions
 
 export default function CalendarPage() {
   const { data: session } = useSession();
+  const calendarRef = useRef<HTMLDivElement>(null); // Create a ref for the calendar component
 
-  const handleExport = (options: ExportOptions) => {
-    // This function will eventually trigger the html-to-image logic
-    // For now, it's mainly a placeholder to connect the SidePanel
-    console.log("CalendarPage received export options:", options);
-    // In Milestone 5, you'd pass a ref to MonthCalendar or trigger a function in it
+  const handleExport = async (options: ExportOptions) => {
+    if (!calendarRef.current) {
+      console.error("Calendar element not found for export.");
+      alert("Error: Could not find calendar to export.");
+      return;
+    }
+
+    const { fileType, aspectRatio } = options; // We'll use fileType. AspectRatio might need more advanced handling.
+    const elementToCapture = calendarRef.current;
+
+    // Optional: Apply temporary styles for export if needed, e.g., to ensure all content is visible
+    // This can get complex. For now, we capture as-is.
+    // Consider a "clean layout" div later if current styling isn't export-friendly.
+
+    try {
+      let dataUrl;
+      const filename = `calendar-month-${new Date().toISOString().split('T')[0]}`;
+
+      // Simple quality setting for JPEG
+      const jpegQuality = 0.95;
+      // Options for html-to-image
+      const imageOptions = {
+        quality: jpegQuality,
+        // Ensure images within the calendar are loaded (especially if from external sources later)
+        // You might need to configure `fetchRequest` or ensure blob URLs are handled if that's the case.
+        // For now, local blob URLs for previews should generally work.
+        // pixelRatio: window.devicePixelRatio * 2, // For higher resolution, adjust as needed
+        // backgroundColor: '#ffffff', // Explicitly set background if needed
+      };
+
+
+      if (fileType === 'png') {
+        dataUrl = await toPng(elementToCapture, imageOptions);
+      } else if (fileType === 'jpeg') {
+        dataUrl = await toJpeg(elementToCapture, imageOptions);
+      } else {
+        console.error("Unsupported file type:", fileType);
+        alert("Unsupported file type for export.");
+        return;
+      }
+
+      // Trigger download
+      const link = document.createElement('a');
+      link.download = `${filename}.${fileType}`;
+      link.href = dataUrl;
+      document.body.appendChild(link); // Required for Firefox
+      link.click();
+      document.body.removeChild(link); // Clean up
+
+      console.log(`Calendar exported as ${filename}.${fileType}`);
+
+    } catch (error) {
+      console.error("Error exporting calendar:", error);
+      alert("An error occurred while exporting the calendar. Check the console for details.");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Head>
-        <title>Calendar | Calendium</title>
+        <title> {session?.user?.name + "'s"} Calvas</title>
       </Head>
 
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-full mx-auto py-3 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Calendium</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Calvas</h1>
           <div className="flex items-center space-x-3 sm:space-x-4">
             {session?.user?.image ? (
-              <Image
+              <img
                 src={session.user.image}
                 alt={session.user.name || "Profile"}
                 className="h-8 w-8 rounded-full"
-                width={32}
-                height={32}
-                priority
               />
             ) : (
               <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm">
@@ -53,21 +102,16 @@ export default function CalendarPage() {
         </div>
       </header>
 
-      <div className="flex-grow flex flex-col md:flex-row max-w-full mx-auto w-full p-2 sm:p-4 gap-1">
-        {/* Side Panel - takes up 20-25% on medium screens and above */}
+      <div className="flex-grow flex flex-col md:flex-row max-w-full mx-auto w-full p-2 sm:p-4 gap-2">
         <aside className="w-full md:w-1/5 lg:w-1/4 xl:w-1/5 flex-shrink-0">
           <SidePanel onExport={handleExport} />
         </aside>
 
-        {/* Main Calendar Content - takes remaining space */}
         <main className="flex-grow w-full md:w-4/5 lg:w-3/4 xl:w-4/5">
-          <MonthCalendar />
+          {/* Passing the ref to MonthCalendar */}
+          <MonthCalendar ref={calendarRef} />
         </main>
       </div>
-       {/* Footer (Optional, if you want it at the very bottom of the viewport) */}
-      {/* <footer className="bg-gray-800 text-white py-4 text-center text-sm">
-        © {new Date().getFullYear()} Calendium App
-      </footer> */}
     </div>
   );
 }

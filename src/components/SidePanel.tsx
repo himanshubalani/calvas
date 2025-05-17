@@ -18,7 +18,6 @@ export default function SidePanel({ onExport }: SidePanelProps) {
   const handleExport = (fileType: 'png' | 'jpeg' | 'svg') => {
     onExport({ aspectRatio, fileType });
     console.log('Exporting with options:', { aspectRatio, fileType });
-    alert(`Export initiated (Milestone 5 feature)!\nOptions: ${aspectRatio}, ${fileType.toUpperCase()}`);
     setDropdownOpen(false);
   };
 

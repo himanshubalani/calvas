@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ChangeEvent, DragEvent, useRef } from 'react';
-import Image from 'next/image';
 
 interface EntryModalProps {
   isOpen: boolean;
@@ -40,7 +39,7 @@ export default function EntryModal({
 
     return () => {
       if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
+         //URL.revokeObjectURL(objectUrl);
          // console.log("Revoked Object URL:", objectUrl); // For debugging
       }
     };
@@ -88,7 +87,7 @@ export default function EntryModal({
     }
     // Revoke previous object URL if a new file is selected immediately after another
     if (previewUrl && previewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(previewUrl);
+        //URL.revokeObjectURL(previewUrl);
     }
     setSelectedFile(file);
     // Preview URL generation moved to useEffect
@@ -153,11 +152,10 @@ export default function EntryModal({
                <div
                     className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 ${
                     isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 border-dashed'
-                    } rounded-md cursor-pointer`}
+                    } rounded-md`}
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    onClick={triggerFileInput}
                 >
                     <input
                     ref={fileInputRef}
@@ -167,7 +165,7 @@ export default function EntryModal({
                     className="sr-only"
                     id="file-upload"
                     />
-                    <div className="space-y-1 text-center">
+                    <div className="space-y-1 w-full text-center">
                     <svg
                         className="mx-auto h-12 w-12 text-gray-400"
                         stroke="currentColor"
@@ -182,35 +180,33 @@ export default function EntryModal({
                         strokeLinejoin="round"
                         />
                     </svg>
-                    <div className="flex text-sm text-gray-600">
+                    <div className="flex text-sm text-gray-600 ">
                         <label
                         htmlFor="file-upload"
-                        className="block cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                        className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
                         >
                         <span>Upload a file</span>
                         </label>
                         <p className="pl-1">or drag and drop</p>
                     </div>
                     <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                    {selectedFile && <p className="text-xs text-green-600 mt-1 overflow-hidden whitespace-nowrap text-ellipsis">Selected: {selectedFile.name}</p>}
-                    </div>
-                </div>
+                    {selectedFile && (
+  <div className="w-full px-2"> {/* Added container with padding */}
+    <p className="text-xs text-green-600 mt-1 truncate"> {/* Removed max-w-full as truncate handles it */}
+      Selected: {selectedFile.name}
+    </p>
+  </div>
+)}
             </div>
           </div>
-
+</div>
+    </div>
           {/* Right Side: Photo Preview */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Photo Preview</label>
             <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden">
               {previewUrl ? (
-                <Image
-                  src={previewUrl}
-                  alt="Preview"
-                  className="object-cover"
-                  fill
-                  sizes="100%"
-                  priority
-                />
+                <img src={previewUrl} alt="Preview" className="object-cover w-full h-full" />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">
                   <svg className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
