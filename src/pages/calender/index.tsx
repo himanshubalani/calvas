@@ -78,13 +78,16 @@ export default function CalendarPage() {
           <div className="flex items-center space-x-3 sm:space-x-4">
             {session?.user?.image ? (
               <img
-                src={session.user.image}
-                alt={session.user.name || "Profile"}
-                className="h-8 w-8 rounded-full"
+              src={session.user.image}
+              alt={session.user.name || "Profile"}
+              className="h-8 w-8 rounded-full"
+              onError={(e) => {
+                e.currentTarget.src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp';
+              }}
               />
             ) : (
               <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm">
-                {session?.user?.name?.charAt(0)?.toUpperCase() || session?.user?.email?.charAt(0)?.toUpperCase() || "U"}
+              {session?.user?.name?.charAt(0)?.toUpperCase() || session?.user?.email?.charAt(0)?.toUpperCase() || "U"}
               </div>
             )}
             <div>

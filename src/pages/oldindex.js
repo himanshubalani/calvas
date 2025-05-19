@@ -1,6 +1,6 @@
-// pages/index.js
+// pages/index.js (old version)
 import Head from 'next/head';
-import MonthCalendar from '../components/MonthCalendar.jsx';
+import MonthCalendar from '../components/MonthCalendar.js';
 import '../styles/Global.css';
 
 export default function Home() {

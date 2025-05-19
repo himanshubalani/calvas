@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { Session } from "next-auth";
 import "../styles/globals.css";
 
-function MyApp({
+function Calvas({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps<{
@@ -17,4 +17,4 @@ function MyApp({
   );
 }
 
-export default MyApp;
+export default Calvas;
