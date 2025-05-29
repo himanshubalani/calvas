@@ -1,8 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import { Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import AppleProvider from "next-auth/providers/apple";
+import GithubProvider from "next-auth/providers/github";
 
 export const authOptions: NextAuthOptions = {
 	providers: [
@@ -10,10 +8,11 @@ export const authOptions: NextAuthOptions = {
 			clientId: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 		}),
-		AppleProvider({
-			clientId: process.env.APPLE_CLIENT_ID!,
-			clientSecret: process.env.APPLE_CLIENT_SECRET!,
+		GithubProvider({
+			clientId: process.env.GITHUB_CLIENT_ID!,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
 		}),
+
 	],
 	pages: {
 		signIn: "/login",
@@ -25,7 +24,7 @@ export const authOptions: NextAuthOptions = {
 		strategy: "jwt",
 	},
 
-	secret: process.env.AUTH_SECRET,
+	secret: process.env.NEXTAUTH_SECRET,
 
 	callbacks: {
 		async jwt({ token, user }) {
@@ -39,10 +38,9 @@ export const authOptions: NextAuthOptions = {
 		},
 		async session({ session, token }) {
 			if (token) {
-				session.user!.id = token._id as string;
-				session.user!._isVerified = token._isVerified as boolean;
-				session.user!._isAcceptingMessages = token._isAcceptingMessages as boolean;
-				session.user!._username = token._username as string;
+				session.user!.name = token._id as string;
+				session.user!.email = token.email as string;
+				session.user!.image = token.picture as string;
 			}
 			return session;
 		},

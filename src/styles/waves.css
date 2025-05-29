@@ -1,0 +1,49 @@
+.wave-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -10%;
+    left: -10%;
+    border-radius: 70%;
+    animation: wave 8s infinite linear;
+    filter: blur(50px);
+}
+
+.wave:nth-child(1) {
+    background: linear-gradient(0deg, #3087f8, #90a8ed);
+    animation-duration: 12s;
+    opacity: 0.4;
+}
+
+.wave:nth-child(2) {
+    background: linear-gradient(150deg, #37ecf5, #119feb);
+    animation-duration: 8s;
+    animation-delay: -5s;
+    opacity: 0.4;
+}
+
+.wave:nth-child(3) {
+    background: linear-gradient(45deg, #63b3f4, #4fc3f7);
+    animation-duration: 15s;
+    animation-delay: -8s;
+    opacity: 0.3;
+}
+
+@keyframes wave {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

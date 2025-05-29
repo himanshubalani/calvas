@@ -1,10 +1,8 @@
 // pages/index.tsx
-import { useSession } from "next-auth/react";
 import Link from "next/link"
 import { ArrowRight, Calendar, Camera, CheckCircle, Edit, Share2, Zap } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { link } from "fs";
 
 export default function LandingPage() {
   return (
@@ -47,7 +45,7 @@ export default function LandingPage() {
                     Your calendar, reimagined
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Calvas is more than a calendar. It's a canvas for your life — add photos, notes, and tasks to create
+                    Calvas is more than a calendar. It&aposs a canvas for your life — add photos, notes, and tasks to create
                     a visual journey of your days.
                   </p>
                 </div>

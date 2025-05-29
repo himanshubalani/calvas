@@ -205,7 +205,7 @@ export default function EntryModal({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Photo Preview</label>
             <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden">
-              {previewUrl ? (
+              {previewUrl && previewUrl.startsWith('blob:') ? (
                 <img src={previewUrl} alt="Preview" className="object-cover w-full h-full" />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">
