@@ -5,6 +5,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+   ;
     z-index: -1;
 }
 
@@ -20,23 +21,23 @@
 }
 
 .wave:nth-child(1) {
-    background: linear-gradient(0deg, #3087f8, #90a8ed);
-    animation-duration: 12s;
-    opacity: 0.4;
+    background: linear-gradient(200deg, #3087f8, #90a8ed);
+    animation-duration: 9s;
+    opacity: 0.3;
 }
 
 .wave:nth-child(2) {
     background: linear-gradient(150deg, #37ecf5, #119feb);
-    animation-duration: 8s;
+    animation-duration: 14s;
     animation-delay: -5s;
-    opacity: 0.4;
+    opacity: 0.2;
 }
 
 .wave:nth-child(3) {
     background: linear-gradient(45deg, #63b3f4, #4fc3f7);
     animation-duration: 15s;
     animation-delay: -8s;
-    opacity: 0.3;
+    opacity: 0.1;
 }
 
 @keyframes wave {
