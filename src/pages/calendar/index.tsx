@@ -7,8 +7,7 @@ import { toPng, toJpeg } from 'html-to-image'; // Import html-to-image functions
 
 export default function CalendarPage() {
   const { data: session } = useSession();
-  const calendarRef = useRef<HTMLDivElement>(null); // Create a ref for the calendar component
-
+  const calendarRef = useRef<HTMLDivElement>(null); 
   const handleExport = async (options: ExportOptions) => {
     if (!calendarRef.current) {
       console.error("Calendar element not found for export.");
@@ -72,11 +71,11 @@ export default function CalendarPage() {
         <title> {session?.user?.name + "'s"} Calvas</title>
       </Head>
 
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      {/* <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-full mx-auto py-3 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Calvas</h1>
           <div className="flex items-center space-x-3 sm:space-x-4">
-            {session?.user?.image ? (
+            {session?.user?.image? (
               <img
               src={session.user.image}
               alt={session.user.name || "Profile"}
@@ -87,7 +86,7 @@ export default function CalendarPage() {
               />
             ) : (
               <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm">
-              {session?.user?.name?.charAt(0)?.toUpperCase() || session?.user?.email?.charAt(0)?.toUpperCase() || "U"}
+              {session?.user?.name!.charAt(0)?.toUpperCase() || session?.user?.email?.charAt(0)?.toUpperCase() || "U"}
               </div>
             )}
             <div>
@@ -103,7 +102,7 @@ export default function CalendarPage() {
             </button>
           </div>
         </div>
-      </header>
+      </header> */}
 
       <div className="flex-grow flex flex-col md:flex-row max-w-full mx-auto w-full p-2 sm:p-4 gap-2">
         <aside className="w-full md:w-1/5 lg:w-1/4 xl:w-1/5 flex-shrink-0">

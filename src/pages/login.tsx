@@ -1,15 +1,15 @@
 // pages/login.tsx
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import "../styles/waves.css";
+import styles from "../styles/waves.module.css";
 
 export default function Login() {
   return (
     <div className="relative min-h-screen">
-      <div className="wave-container">
-        <div className="wave" />
-        <div className="wave" />
-        <div className="wave" />
+      <div className={styles.waveContainer}>
+        <div className={styles.wave} />
+        <div className={styles.wave} />
+        <div className={styles.wave} />
       </div>
 
       <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">

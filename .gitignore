@@ -42,7 +42,8 @@ next-env.d.ts
 
 #prisma migrations
 prisma/migrations
-prisma\.env.local
+prisma/.env.local
+lib\prisma
 
 #notes
 /znotes

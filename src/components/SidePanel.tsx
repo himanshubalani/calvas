@@ -22,7 +22,9 @@ export default function SidePanel({ onExport }: SidePanelProps) {
   };
 
   return (
+    // add calvas text title
     <div className="p-4">
+      <h1 className="text-3xl font-bold mb-4">Calvas</h1>
       <h2 className="text-lg font-semibold mb-4">Export Month</h2>
 
       {/* Aspect Ratio Selection */}

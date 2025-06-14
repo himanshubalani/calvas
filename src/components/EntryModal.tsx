@@ -4,9 +4,9 @@ interface EntryModalProps {
   isOpen: boolean;
   onClose: () => void;
   date: Date | null;
-  onSave: (date: Date, photoFile: File | null, photoUrl: string | null) => void; // Pass file for future upload, URL for immediate display
+  onSave: (date: Date, photoFile: File | null, photoUrl: string | null, note: string | null) => void;
   initialPhotoUrl?: string | null;
-  // Add initialNote, initialTasks later
+  initialNote?: string | null;
 }
 
 export default function EntryModal({
@@ -15,45 +15,45 @@ export default function EntryModal({
   date,
   onSave,
   initialPhotoUrl = null,
-  // initialNote = '',
-  // initialTasks = [],
+  initialNote = null,
 }: EntryModalProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialPhotoUrl);
+  const [currentNote, setCurrentNote] = useState(initialNote);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Reset state when the initial photo URL changes (e.g., opening modal for a different day)
   useEffect(() => {
     setPreviewUrl(initialPhotoUrl);
-    setSelectedFile(null); // Clear any previously selected file if we load existing data
-  }, [initialPhotoUrl, date]); // Depend on date as well to ensure reset
+    setCurrentNote(initialNote || ''); 
+    setSelectedFile(null);
+  }, [initialPhotoUrl, initialNote, date]);
 
-  // Cleanup object URL on unmount or when previewUrl changes
+
   useEffect(() => {
     let objectUrl: string | null = null;
     if (selectedFile) {
       objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
     }
-
-    return () => {
-      if (objectUrl) {
-         //URL.revokeObjectURL(objectUrl);
-         // console.log("Revoked Object URL:", objectUrl); // For debugging
-      }
-    };
+    // No need to revoke here if we are passing the blob URL for display.
+    // Revocation should happen if the component unmounts AND the URL is a blob.
+    // Or if a new blob is created.
+    // However, for simplicity in this step, we'll let the browser manage blob URLs.
+    // They are typically revoked when the document that created them is unloaded.
+    // For more robust revocation, you'd track specifically created blob URLs.
+    // return () => {
+    //   if (objectUrl && objectUrl.startsWith('blob:')) {
+    //      URL.revokeObjectURL(objectUrl);
+    //   }
+    // };
   }, [selectedFile]);
-
 
   const handleSave = () => {
     if (date) {
-        // If a new file was selected, pass it and its preview URL.
-        // If no new file, but an initial URL existed, pass null file and initial URL.
-        // If cleared (logic not added yet, but could be), pass null file and null URL.
-        onSave(date, selectedFile, previewUrl);
+      onSave(date, selectedFile, previewUrl, currentNote);
     }
-    onClose(); // Close modal after saving
+    onClose();
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ export default function EntryModal({
     }
   };
 
-   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(true);
   };
@@ -85,20 +85,14 @@ export default function EntryModal({
       alert('Please select an image file.');
       return;
     }
-    // Revoke previous object URL if a new file is selected immediately after another
-    if (previewUrl && previewUrl.startsWith('blob:')) {
-        //URL.revokeObjectURL(previewUrl);
-    }
     setSelectedFile(file);
-    // Preview URL generation moved to useEffect
   };
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
-  // Handle Escape key press to close modal
-   useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
@@ -112,13 +106,11 @@ export default function EntryModal({
     };
   }, [isOpen, onClose]);
 
-
   if (!isOpen || !date) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl relative max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
@@ -132,21 +124,24 @@ export default function EntryModal({
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left Side: Inputs (Note, Tasks - future) & Upload */}
           <div className="space-y-4">
-            {/* Placeholder for Note */}
             <div>
               <label htmlFor="note" className="block text-sm font-medium text-gray-700 mb-1">Note</label>
-              <textarea id="note" rows={3} className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Add a note..."></textarea>
+              <textarea
+                id="note"
+                rows={3}
+                value={currentNote}
+                onChange={(e) => setCurrentNote(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Add a note..."
+              />
             </div>
 
-             {/* Placeholder for Tasks */}
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tasks</label>
                 <div className="text-sm text-gray-400 italic">(Task list coming soon)</div>
             </div>
 
-            {/* Photo Upload Section */}
             <div>
                <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>
                <div
@@ -156,6 +151,7 @@ export default function EntryModal({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
+                    onClick={triggerFileInput} // Allow click to open file dialog
                 >
                     <input
                     ref={fileInputRef}
@@ -180,32 +176,35 @@ export default function EntryModal({
                         strokeLinejoin="round"
                         />
                     </svg>
-                    <div className="flex text-sm text-gray-600 ">
+                    <div className="flex text-sm text-gray-600 justify-center">
                         <label
                         htmlFor="file-upload"
                         className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                        onClick={(e) => {
+                            // Prevent this click from bubbling up to the parent div's onClick handler
+                            e.stopPropagation();
+                        }}
                         >
                         <span>Upload a file</span>
                         </label>
                         <p className="pl-1">or drag and drop</p>
                     </div>
-                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
                     {selectedFile && (
-  <div className="w-full px-2"> {/* Added container with padding */}
-    <p className="text-xs text-green-600 mt-1 truncate"> {/* Removed max-w-full as truncate handles it */}
-      Selected: {selectedFile.name}
-    </p>
-  </div>
-)}
+                      <div className="w-full px-2">
+                        <p className="text-xs text-green-600 mt-1 truncate">
+                          Selected: {selectedFile.name}
+                        </p>
+                      </div>
+                    )}
+                    </div>
+                </div>
             </div>
           </div>
-</div>
-    </div>
-          {/* Right Side: Photo Preview */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Photo Preview</label>
             <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-md overflow-hidden">
-              {previewUrl && previewUrl.startsWith('blob:') ? (
+              {previewUrl ? ( // Check if previewUrl is not null/undefined
                 <img src={previewUrl} alt="Preview" className="object-cover w-full h-full" />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400">
@@ -224,7 +223,6 @@ export default function EntryModal({
           </div>
         </div>
 
-        {/* Modal Footer */}
         <div className="mt-6 flex justify-end space-x-3">
           <button
             type="button"

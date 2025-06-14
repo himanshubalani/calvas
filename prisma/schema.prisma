@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../lib/prisma"
 }
 
 datasource db {
@@ -51,6 +51,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  entries       Entry[]
 }
 
 model VerificationToken {
@@ -59,4 +60,17 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Entry {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date 
+  note      String?  @db.Text
+  tasks     Json?    
+  photoUrl  String?  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date]) // Ensures one entry per user per day
+  @@index([userId, date])
 }
