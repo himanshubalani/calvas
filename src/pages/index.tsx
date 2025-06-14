@@ -50,7 +50,9 @@ export default function CalvasLanding() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-lg px-8 py-6">
-                Try the Calendar
+                <Link href="/calendar" className="flex items-center">
+                  Try the Calendar
+                </Link>
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
                 View Demo
@@ -236,6 +238,8 @@ export default function CalvasLanding() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 py-6">
+              <Link href="/calendar" className="flex items-center">
+                <Calendar className="h-5 w-5 mr-2" />
               Open Calvas
             </Button>
             <Button variant="outline" size="lg" className="text-lg px-8 py-6" asChild>
