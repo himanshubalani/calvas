@@ -57,7 +57,7 @@ export default function CalendarPage() {
   };
 
   // Handler to update the aspect ratio state
-  const handleRatioChange = (newRatioValue: number) => {
+  const handleRatioChange = (newRatioValue: number | null) => {
     setCurrentAspectRatio(newRatioValue);
   };
 
@@ -123,7 +123,7 @@ export default function CalendarPage() {
     <div
         className="bg-transparent"
         style={{
-          aspectRatio: currentAspectRatio.toString() || '16/9',
+          aspectRatio: currentAspectRatio ? currentAspectRatio.toString() : '16/9',
           maxHeight: "calc(100vh - 2rem)", // safe margin from viewport height
           maxWidth: "100%",
           height: "100%",
