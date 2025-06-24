@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Calendar, PenTool, Camera, Download, Github, Zap, Shield } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { Analytics } from "@vercel/analytics/next"
 
 export default function CalvasLanding() {
   return (
