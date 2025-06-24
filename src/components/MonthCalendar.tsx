@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, forwardRef } from 'react';
 import EntryModal from './EntryModal'; // Import the modal component
+;
+
 
 interface CalendarDay {
   day: number | string;
@@ -23,7 +25,8 @@ const formatDateKey = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-const MonthCalendar = forwardRef<HTMLDivElement>((props, ref) => {
+const MonthCalendar = forwardRef<HTMLDivElement>((_, ref) => {
+
   const today = new Date();
   const [currentDisplayDate, setCurrentDisplayDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [daysInMonth, setDaysInMonth] = useState<CalendarDay[]>([]);
@@ -119,10 +122,11 @@ const MonthCalendar = forwardRef<HTMLDivElement>((props, ref) => {
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const currentEntry = selectedDate ? entries[formatDateKey(selectedDate)] : undefined;
 
-  return (
+   return (
     <>
-      <div ref={ref} className="bg-white p-4 sm:p-6 rounded-lg shadow">
-        {/* Header */}
+      <div
+  ref={ref}
+  className="bg-white p-4 sm:p-6 rounded-lg shadow h-[calc(100vh-3rem)] overflow-y-auto">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={goToPreviousMonth}
@@ -171,7 +175,7 @@ const MonthCalendar = forwardRef<HTMLDivElement>((props, ref) => {
             return (
               <div
                 key={`${dayObj.date.toISOString()}-${index}`}
-                className={`relative h-20 sm:h-24 md:h-28 border border-gray-200 transition duration-150 ease-in-out cursor-pointer overflow-hidden rounded-lg ${
+                className={`relative h-20 sm:h-24 md:h-24 border border-gray-200 transition duration-150 ease-in-out cursor-pointer overflow-hidden rounded-lg ${
                   dayObj.isCurrentMonth ? 'hover:bg-gray-50' : 'opacity-60'
                 } ${dayObj.isToday ? 'ring-2 ring-blue-500 ring-inset' : ''}`}
                 onClick={() => handleDayClick(dayObj)}

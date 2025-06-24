@@ -130,7 +130,7 @@ export default function EntryModal({
               <textarea
                 id="note"
                 rows={3}
-                value={currentNote}
+                value={currentNote || ''}
                 onChange={(e) => setCurrentNote(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Add a note..."
